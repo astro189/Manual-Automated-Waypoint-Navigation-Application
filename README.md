@@ -3,9 +3,9 @@
 <p>It provides a Automated or Manual waypoint indoor navigation system this involves creating a system that allows a device or robot to navigate autonomously within an indoor environment by following predefined waypoints. Avoiding collision and coordinating with other systems in its environment for safe navigation.</p>
 
 <h2>Phase-I: A basic implementaton of the idea</h2>
-<h3>Compnents of Phase-I</h3>
+<h3>Components of Phase-I</h3>
 <li>A Simple Robotic System</li>
-<li>Implement the basic structure of the Path finding algorithm</li>
+<li>Basic implementation of the Path finding algorithm</li>
 <li>Set up a Coordinate mapping and Transformation system</li>
 <li>Establish a communication in between the Software and Hardware</li>
 
@@ -77,5 +77,7 @@
 
 <p>This is where the Wifi-Module comes into the picture. We use a ESP 8266 NodeMCU wifi module for establishing a wireless connection with the robotic system over a local IP Address.</p>
 <p>The real world transformed coordinates are converted to commands and passed to the NodeMCU along with the time for which each command should be executed. The NodeMCU then executes the Arduino script which controls the components of the robotic system based on the received coordinates. This approach is also subject to change in the future phases as a much more robust system is required for a better real time tracking of the system coordinates.</p>
+
+https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Readme_files/MAWNA%20Demo.mp4
 
 
