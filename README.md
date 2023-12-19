@@ -1,6 +1,6 @@
 # Manual-Automated-Waypoint-Navigation-Application
 <h4>What is MAWNA ?</h4>
-<p>It provides a Automated or Manual waypoint indoor navigation system this involves creating a system that allows a device or robot to navigate autonomously within an indoor environment by following predefined waypoints. Avoiding collision and coordinating with other systems in its environment for safe navigation.</p>
+<p>It provides a generalized Automated or Manual waypoint indoor navigation system this involves  allowing any robotic system to navigate autonomously within an indoor environment by following the waypoints present in its generated path, Avoiding collision and coordinating with other systems in its environment for safe navigation.</p>
 
 <h2>Phase-I: A basic implementaton of the idea</h2>
 <h3>Components of Phase-I</h3>
