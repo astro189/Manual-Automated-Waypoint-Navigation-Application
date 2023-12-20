@@ -9,10 +9,11 @@ import time
 
 
 
-img = cv2.imread(r'C:\Users\Shirshak\Desktop\MAWNA\Photos\Final_Map1.png')
-# print(img.shape)
+img = cv2.imread(r'C:\Users\Shirshak\Desktop\Robotics Summer Project\Photos\Final_Map1.png')
 imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 imgCanny = cv2.Canny(imgGray,255,255)
+print("Generating Map:\n")
+print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
 
 #FOR DETECTING ARUCO MARKERS
 
@@ -43,12 +44,10 @@ def findArucoMarkers(img):
                 x+=1
             if corners[0][1]-p>=.5:
                 y+=1
-    # print(marker_corner[0][0][0][0],marker_corner[0][0][0][1])
 
     return [(x,y+1),marker_IDs,((x+1+(w//2)),y+1+(h//2))]
 
 coord_aruco,arucoFound,aruco_center = findArucoMarkers(img)
-# print(coord_aruco)
 
 #DEFINING A CLASS WITH ALL NECESSTIES FOR EACH CELL 
 
@@ -83,13 +82,10 @@ def getContours(img):
             epsilon = 0.1*perimeter
             approx = cv2.approxPolyDP(contour,epsilon,True)
             x, y, w, h = cv2.boundingRect(approx)
-            # cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
-            # cv2.circle(img,(x,y),3,(0,0,255),thickness=-1)
+
             cv2.putText(img, str(i), (x + (w//2),y + (h//2)), cv2.FONT_HERSHEY_TRIPLEX,1, (255,0,0), 2, cv2.FILLED)
             minContours.append(approx)
             c.append((x,y))
-            # if i==325:
-            #     print(x,y)
             i = i+1
     
         val[i]=contour
@@ -132,12 +128,12 @@ for cnt in minContours:
 
     id = id + 1
 
-def h(cell1,cell2):
+def g(cell1,cell2):
     x1,y1=cell1  
 
     x2,y2=cell2   
 
-    return abs(x1-x2)+abs(y1-y2) #
+    return abs(x1-x2)+abs(y1-y2) 
 
 
 for w in w_all:
@@ -148,8 +144,11 @@ for h in h_all:
 
 w_av = w_sum/total
 h_av = h_sum/total
+j=0
 for spot in spots:
     i = 0
+    if j%4==0:
+        print("#",end="")
     for cnt in minContours:
         if(cv2.pointPolygonTest(cnt, (spot.centre[0] + w_av, spot.centre[1]), False)==1):
             spot.neighbors.append(i)
@@ -160,17 +159,15 @@ for spot in spots:
         elif(cv2.pointPolygonTest(cnt, (spot.centre[0] , spot.centre[1] - h_av), False)==1):
             spot.neighbors.append(i)
         i += 1
+    j+=1
 
-# for spot in spots:
-#     print(spot.neighbors)
+
 Map = cv2.resize(img, (1500,800))
-# Map = cv2.resize(img, (1300,640))
 
 cv2.imshow('Map',Map)
 cv2.waitKey(0)
 
-# start=int(input("Enter starting point"))
-last=int(input("Enter Final Point:"))
+last=int(input("\n\nEnter Final Point:"))
 
 start = spots[begin]
 end = spots[last]
@@ -181,7 +178,7 @@ for spot in spots:
 count = 0
 open_set = PriorityQueue()
 open_set.put( (0, count, begin) ) #f_score, count(for tie breaking if 2 have same f_score), spot_id) 
-came_from = {}
+came_from = {begin:None}
 g_score = {spot: float("inf") for spot in range(0,i+1)}
 g_score[begin] = 0
 f_score = {spot: float("inf") for spot in range(0,i+1)}
@@ -189,19 +186,21 @@ f_score[begin] = abs(spots[0].centre[0]-spots[last].centre[0]) + abs(spots[0].ce
 
 
 open_set_hash = {begin}
+closedList=[]
 
 while not open_set.empty():
     current = open_set.get()[2]
     
     open_set_hash.remove(current)
+    closedList.append(current)
 
     if current == last:
         break
     
     for neighbor in spots[current].neighbors :
-        if neighbor in came_from:continue
-        temp_g_score = g_score[current] + 45
+        if neighbor in closedList:continue
 
+        temp_g_score = g_score[current] + g((spots[neighbor].centre[0],spots[neighbor].centre[1]),(spots[current].centre[0],spots[current].centre[1]))
 
         if temp_g_score < g_score[neighbor]:
             came_from[neighbor] = current
@@ -212,50 +211,23 @@ while not open_set.empty():
                 count = count + 1
                 open_set.put( (f_score[neighbor], count, neighbor) )
                 open_set_hash.add(neighbor)
-# print(came_from)
-                
-imgFinal = cv2.resize(img, (1500,800))
-path_to_Traverse=[]
-def print_path(img):
-
-    list1=[]
-    for i in came_from:
-        # print(i)
-        list1.append(came_from[i])
-    coords = []
-   
-    [coords.append(x) for x in list1 if x not in coords]
-    j=0
-    
-    for coord in coords:
-        cv2.rectangle(img,(spots[coord].x,spots[coord].y),(spots[coord].x+spots[coord].w,spots[coord].y+spots[coord].h),
-                      (0,255,0),thickness=cv2.FILLED)
-        path_to_Traverse.append([(spots[coord].x+w//2),(spots[coord].y+h//2)])
-        # imgFinal = cv2.resize(img, (1500,800))
-        # cv2.circle(img,((spots[coord].x+w//2),(spots[coord].y+h//2)),30,(255,0,0),thickness=cv2.FILLED)
-        # cv2.imshow('Contour Detection', imgFinal)
-        # cv2.waitKey(0)
-        # imgFinal = cv2.resize(img, (1500,800))
-        # cv2.imshow('Contour Detection', imgFinal)
-        # cv2.waitKey(0)
-    # for i in path:
-    #     if i==coords[j]:
-    #         perimeter = cv2.arcLength(path[i+1],True)
-    #         epsilon = 0.02*perimeter
-    #         approx = cv2.approxPolyDP(path[i+1],epsilon,True)
-    #         x, y, w, h = cv2.boundingRect(approx)
-    #         cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),thickness=cv2.FILLED)
-    #         path_to_Traverse.append([(x+w//2),(y+h//2)])
-    #         imgFinal = cv2.resize(img, (1500,800))
-    #         cv2.imshow('Contour Detection', imgFinal)
-    #         cv2.waitKey(0)
-
-    #         # cv2.circle(img,((x+w//2),(y+h//2)),30,(255,0,0),thickness=cv2.FILLED)
-    #         j+=1
-    #     if j==len(coords)-1:
-    #         break
-
+            
         
+path_to_Traverse=[]
+
+def print_path(img):
+    nodes=[]
+    current=last
+    while came_from[current]!=None:
+        nodes.append(came_from[current])
+        current=came_from[current]
+    
+    for node in nodes[::-1]:
+        cv2.rectangle(img,(spots[node].x,spots[node].y),(spots[node].x+spots[node].w,spots[node].y+spots[node].h),
+                      (0,255,0),thickness=cv2.FILLED)
+        path_to_Traverse.append([(spots[node].x+w//2),(spots[node].y+h//2)])
+        
+
 print_path(img)
 path_to_Traverse.append(aruco_center)
 real_path=Get_World_Coords(path_to_Traverse)
@@ -266,29 +238,37 @@ def send_coords():
     real_path_new=real_path.tolist()
     return real_path_new,center
 
-def Show_Path(show_map=False):
+def Show_Path(time,show_map=False,track=False):
     if show_map:
         cv2.imshow('Map', Map)
         cv2.waitKey(0)
-    else:
-        cv2.imshow('Path', imgFinal)
-        cv2.waitKey(0)
+    if track:
+        Track(time)
+
+def Track(time):
+    add=0
+    net_time=[]
+    for t in time:
+        if t[0]=="R" or t[0]=="L":
+            add=t[1]
+            continue
+        else:
+            t[1]+=add+0.42
+            add=0
+        net_time.append(t)
+    for coords,t in zip(path_to_Traverse,net_time):
+            t[1]=t[1]*1000
+            imgFinal=cv2.circle(img,(coords[0],coords[1]),30,(255,0,0),thickness=cv2.FILLED)
+            imgFinal = cv2.resize(imgFinal, (1500,800))
+            cv2.imshow('Tracked', imgFinal)
+            cv2.waitKey(int(t[1]))
 
 
 
-def track(y):
-    # for x,y in zip(path,path_to_Traverse):
-    imgFinal = cv2.resize(img, (1500,800))
-    cv2.circle(imgFinal,(path_to_Traverse[y][0],path_to_Traverse[y][1]),30,(255,0,0),thickness=cv2.FILLED)
-    cv2.imshow('Contour Detection', imgFinal)
-    cv2.waitKey(0)
-# cv2.circle(img,aruco_center,30,(255,0,0),cv2.FILLED)
-
-
-# imgFinal = cv2.resize(img, (2000,1000))
+imgFinal = cv2.resize(img, (1500,800))
 
 if __name__=="__main__":
     print(real_path)
-    # cv2.imwrite(r'Photos/output.png',imgFinal)
+    cv2.imwrite(r'Photos/output.png',imgFinal)
     cv2.imshow('Contour Detection', imgFinal)
-    cv2.waitKey(10000000)
+    cv2.waitKey(0)

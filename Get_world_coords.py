@@ -18,12 +18,6 @@ grid_size = 2.5  # Size of each square in centimeters
 rows = 7         # Number of rows in the checkerboard grid
 columns = 9      # Number of columns in the checkerboard grid
 
-# real_world_coordinates = get_real_world_coordinates(grid_size, rows, columns)
-# pixel_coords=None
-# def Get_World_Coords(path_in_pixels):
-#     pixel_coords=np.array(path_in_pixels,dtype=np.float32)
-
-# print(pixel_coords)
 
 
 # Load the camera matrix and distortion coefficients from the .pkl file
@@ -56,12 +50,6 @@ def Get_World_Coords(path_in_pixels):
 
 # Calculate the transformation matrix
     transformation_matrix,_= cv2.findHomography(pixel_coordinates, real_world_coordinates)
-
-# Convert a pixel coordinate to a real-world coordinate
-# for x,y in pixel_coords:
-#     pixel_coord = np.array([x, y, 1])
-    # real_world_coord = np.dot(transformation_matrix, pixel_coord)
-    # real_world_coord /= real_world_coord[2]
     real_world_coord = cv2.perspectiveTransform(np.array([pixel_coords], dtype=np.float32), transformation_matrix)
     return real_world_coord
-# print("Real-world coordinates:", real_world_coord)
+
