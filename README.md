@@ -63,7 +63,7 @@
 <p><b>4)</b> With the nodes defined and the evaluation criteria established we can begin our traversal uptil we meet the termination criteria. For each node we only consider four neigbours (Front, Back, Left, Right) ignoring any kind of diagnol movement and decreasing the overall complexity of the system</p>
 
 <p>The algorithm then finds the most optimal route inbetween the start and the goal node</p>
- <p align="center"><img src="Readme_files/output.png" alt="Path" width="500"></p>
+ <p align="center"><img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Photos/output.png" alt="Path" width="500"></p>
  <p align="center"><b>Optimal Path</b></p>
 
 <p>The initial node for the the algorithm is defined by identifying the location of the aruco marker in the map.</p>
