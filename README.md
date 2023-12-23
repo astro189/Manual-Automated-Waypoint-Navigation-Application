@@ -60,7 +60,7 @@
 <p><b>1)</b> We start by creating a graph of all the possible nodes in the search space</p>
 <p><b>2)</b> Next we maintain two lists called the Open and the Closed list. The open list consist of all the nodes that haven't been explored by the agent yet and the closed list consit of all nodes which have been explored. We initialize the open list with the starting node of the graph</p>
 <p><b>3)</b> Each node is evaluated based on it evaluation cost criteria which in the case of A star is given as the sum of the heuristic cost and the payth cost. Since our current goal is just a basic implemntation of the algorithm we begin with a relatively simple heuristic as the <b>Manhattan distance</b></p>
-<p><b>4)</b> With the nodes defined and the evaluation criteria established we can begin our traversal uptil we meet the termination criteria. For each node we only consider four neigbours (Front, Back, Left, Right) ignoring any kind of diagnol movement and decreasing the overall complexity of the system</p>
+<p><b>4)</b> With the nodes defined and the evaluation criteria established we can begin our traversal uptil we meet the termination criteria. For each node we only consider cardinal movement ignoring any kind of diagnol movement and decreasing the overall complexity of the system</p>
 
 <p>The algorithm then finds the most optimal route inbetween the start and the goal node</p>
  <p align="center"><img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Photos/output.png" alt="Path" width="500"></p>
