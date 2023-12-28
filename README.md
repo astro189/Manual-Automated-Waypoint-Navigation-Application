@@ -78,6 +78,6 @@
 <p>This is where the Wifi-Module comes into the picture. We use a ESP 8266 NodeMCU wifi module for establishing a wireless connection with the robotic system over a local IP Address.</p>
 <p>The real world transformed coordinates are converted to commands and passed to the NodeMCU along with the time for which each command should be executed. The NodeMCU then executes the Arduino script which controls the components of the robotic system based on the received coordinates. This approach is also subject to change in the future phases as a much more robust system is required for a better real time tracking of the system coordinates.</p>
 
-https://www.kapwing.com/videos/658e014402a65ac03ca031af
+https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/assets/97799598/c8de8386-fb8a-4612-b30e-4beb85b01515
 
 
