@@ -94,7 +94,6 @@ My aim is to force the algorithm to go for simpler parallel paths and prefer ope
 <p>The idea is to penalize the edge and corner nodes allowing for a added degree of safety from collisions, narrow pathways and sharp turns.</p>
 <p align="center"><img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Readme_files/Phase-2/Corner_and_Edges.png" alt="Custom Map" width="400"></p>
 <p align="center"><b>Edges and Corners</b></p>
-<p>The penalization criterai used is</p>
 
 <div align="center" style="display: flex; justify-content: space-between;">
         <table>
@@ -128,8 +127,6 @@ My aim is to force the algorithm to go for simpler parallel paths and prefer ope
            </tr>
       </table>
   </div>
-
-<p>Turning regularization is defined as:</p>
 
 <h3>3) Improved A star</h3>
 <p>The final improvement we want to gain is to reduce the number of nodes to be expanded inorder to find the sub-optimal path. To do so, we majorly experimented with two algorithms.</p>
