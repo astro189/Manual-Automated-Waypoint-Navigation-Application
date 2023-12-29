@@ -43,11 +43,11 @@
         <table>
            <tr>
              <td align="center">
-               <img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Photos/Final_Map1.png" alt="Custom Map" width="500">
+               <img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Photos/Final_Map1.png" alt="Custom Map" width="400">
                <p><b>Custom Map</b></p>
              </td>
              <td align="center">
-               <img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Readme_files/Detected%20Map.png" alt="Cells Detected" width="500">
+               <img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Readme_files/Detected%20Map.png" alt="Cells Detected" width="400">
                <p><b>Detected Cells</b></p>
              </td>
            </tr>
@@ -63,8 +63,8 @@
 <p><b>4)</b> With the nodes defined and the evaluation criteria established we can begin our traversal uptil we meet the termination criteria. For each node we only consider cardinal movement ignoring any kind of diagnol movement and decreasing the overall complexity of the system</p>
 
 <p>The algorithm then finds the sub-optimal route inbetween the start and the goal node</p>
- <p align="center"><img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Photos/output.png" alt="Path" width="500"></p>
- <p align="center"><b>Optimal Path</b></p>
+ <p align="center"><img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Photos/output.png" alt="Path" width="400"></p>
+ <p align="center"><b>Sub-Optimal Path</b></p>
 
 <p>The initial node for the the algorithm is defined by identifying the location of the aruco marker in the map.</p>
 
@@ -92,10 +92,42 @@ My aim is to force the algorithm to go for simpler parallel paths and prefer ope
 
 <h3>1) Collision Awareness</h3>
 <p>The idea is to penalize the edge and corner nodes allowing for a added degree of safety from collisions, narrow pathways and sharp turns.</p>
+<p align="center"><img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Readme_files/Phase-2/Corner_and_Edges.png" alt="Custom Map" width="400"></p>
+<p align="center"><b>Edges and Corners</b></p>
 <p>The penalization criterai used is</p>
 
+<div align="center" style="display: flex; justify-content: space-between;">
+        <table>
+           <tr>
+             <td align="center">
+               <img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Readme_files/Phase-2/Without_colision_aware.png" alt="Custom Map" width="400">
+               <p><b>Origianl A*</b></p>
+             </td>
+             <td align="center">
+               <img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Readme_files/Phase-2/With_collision_aware.png" alt="Cells Detected" width="400">
+               <p><b>Collision Aware</b></p>
+             </td>
+           </tr>
+      </table>
+  </div>
+  
 <h3>2) Parallel Motion</h3>
 <p>By prioriatizing parallel motion we want to encourage horizontal/vertical movements, reducing turns and smoothing out the uncessary zig-zag portions that occur in the original algorithm due to the heuristic.The turn regularization is achieved by penalizing it based on its degree of rotation and adding it to the path cost of the node.</p>
+
+<div align="center" style="display: flex; justify-content: space-between;">
+        <table>
+           <tr>
+             <td align="center">
+               <img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Readme_files/Phase-2/zig_zag.png" alt="Custom Map" width="400">
+               <p><b>Zig-Zag Path</b></p>
+             </td>
+             <td align="center">
+               <img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Readme_files/Phase-2/Turn_penalized.png" alt="Cells Detected" width="400">
+               <p><b>Smoothened Path</b></p>
+             </td>
+           </tr>
+      </table>
+  </div>
 
 <p>Turning regularization is defined as:</p>
 
@@ -105,9 +137,43 @@ My aim is to force the algorithm to go for simpler parallel paths and prefer ope
 <li>Dynamic weighted A star</li>
 
 <h4>Weighted A star</h4>
-<p>The idea behind weighted A star is to decrease the number of node expansions through a greedy approach by increasing the heuristics effect over g(n), thus expanding nodes that are closer to the goal. It assumes a constant weight w (w>1). Weighted A star can be considered to lie in between A star and Greedy Best First Search, it also allows us to swicth from in between BFS, Weighted A star and Dijsktra’s algorithm.</p>
+<p>The idea behind weighted A star is to decrease the number of node expansions through a greedy approach by increasing the heuristics effect over g(n), thus expanding nodes that are closer to the goal. It assumes a constant weight w (w>1). Weighted A star can be considered to lie in between A star and Greedy Best First Search, it also allows us to swicth from in between BFS, Weighted A star and Dijsktra’s algorithm. In some cases it can reduce the number of expansions by 40-45%</p>
+
+<div align="center" style="display: flex; justify-content: space-between;">
+        <table>
+           <tr>
+             <td align="center">
+               <img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Readme_files/Phase-2/Astar_Expansion.png" alt="Cells Detected" width="400">
+               <p><b>Original A* (Expansions:258)</b></p>
+             </td>
+             <td align="center">
+               <img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Readme_files/Phase-2/Weigted_A_star_expansions.png" alt="Cells Detected" width="400">
+               <p><b>Weighted A* (Expansions:152)</b></p>
+             </td>
+           </tr>
+      </table>
+  </div>
 
 <h4>Dynamic weighted A star</h4>
-<p>There were a few problems noticed with the orginal algortihm, majorly that since it does follow a greedy approach in some cases it might expand more number of nodes than A star if the relation between h(n) and g(n) is not strong enough. To overcome this a dynamic weigted approach was developed where using the original evaluation function seemed to be more suitable in the initial stages of the search and switch to a weighted function as we reached near the goal node.</p>
+<p>There were a few problems noticed with the orginal algortihm, majorly that since it does follow a greedy approach in some cases it might expand more number of nodes than A star if the relation between h(n) and g(n) is not strong enough. To overcome this a dynamic weigted approach was developed where using the original evaluation function seemed to be more suitable in the initial stages of the search and switch to a weighted function as we reached near the goal node. This acts as a balanced approach in between the two and though it might expand a few more nodes than the weighted a star in some cases, it never expands more than the original.</p>
 
-The above mentioned methoods significantly improve the over all perfromance as well as the paths found by the algorithm
+<div align="center" style="display: flex; justify-content: space-between;">
+        <table>
+           <tr>
+             <td align="center">
+               <img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Readme_files/Phase-2/A_Star_output.png" alt="Cells Detected" width="400">
+               <p><b>Original A* (Expansions:149)</b></p>
+             </td>
+             <td align="center">
+               <img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Readme_files/Phase-2/weigted_astar_output.png" alt="Cells Detected" width="400">
+               <p><b>Weighted A* (Expansions:152)</b></p>
+             </td>
+            <td align="center">
+               <img src="https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/blob/main/Readme_files/Phase-2/Dynamic_Weigthed_Astar.png" alt="Cells Detected" width="400">
+               <p><b>Dynamic Weighted A* (Expansions:133)</b></p>
+             </td>
+           </tr>
+      </table>
+  </div>
+
+The above mentioned methods significantly improve the over all perfromance as well as the paths found by the algorithm
