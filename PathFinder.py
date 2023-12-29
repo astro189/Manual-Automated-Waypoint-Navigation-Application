@@ -52,15 +52,16 @@ coord_aruco,arucoFound,aruco_center = findArucoMarkers(img)
 #DEFINING A CLASS WITH ALL NECESSTIES FOR EACH CELL 
 
 class Spot:
-	def __init__(self, x, y, w, h, id):
-		self.x = x
-		self.y = y
-		self.w = w
-		self.h = h
-		self.id = id
-		self.neighbors = []
-		self.centre = (x+w/2, y+h/2)
-
+    def __init__(self, x, y, w, h, id):
+        self.x=x
+        self.y=y
+        self.h=h
+        self.w=w
+        self.id=id
+        self.neighbors=[]
+        self.centre=(x+w/2,y+h/2)
+        self.edge_score=1
+        
 
 #FOR GETTING ALL THE CONTOURS
 minContours = []
@@ -82,7 +83,7 @@ def getContours(img):
             epsilon = 0.1*perimeter
             approx = cv2.approxPolyDP(contour,epsilon,True)
             x, y, w, h = cv2.boundingRect(approx)
-
+           
             cv2.putText(img, str(i), (x + (w//2),y + (h//2)), cv2.FONT_HERSHEY_TRIPLEX,1, (255,0,0), 2, cv2.FILLED)
             minContours.append(approx)
             c.append((x,y))
@@ -105,6 +106,7 @@ def getContours(img):
 #MAIN
 
 path,begin=getContours(img)
+# begin=70
 
 
 #DEPENDENCIES AND VARIBLES
@@ -128,12 +130,19 @@ for cnt in minContours:
 
     id = id + 1
 
-def g(cell1,cell2):
-    x1,y1=cell1  
+def PathCost(current,neighbor):
+    Turn_Cost=0
+    if current==neighbor:
+        Turn_Cost=0
+    elif current=="F" or current=="B":
+        if neighbor=="L" or neighbor=="R":Turn_Cost=500
+        else: Turn_Cost=1000
 
-    x2,y2=cell2   
-
-    return abs(x1-x2)+abs(y1-y2) 
+    elif current=="L" or current=="R":
+        if neighbor=="F" or neighbor=="B":Turn_Cost=500
+        else: Turn_Cost=1000
+    
+    return Turn_Cost+116
 
 
 for w in w_all:
@@ -151,16 +160,30 @@ for spot in spots:
         print("#",end="")
     for cnt in minContours:
         if(cv2.pointPolygonTest(cnt, (spot.centre[0] + w_av, spot.centre[1]), False)==1):
-            spot.neighbors.append(i)
+            spot.neighbors.append((i,'R'))
         elif(cv2.pointPolygonTest(cnt, (spot.centre[0] - w_av, spot.centre[1]), False)==1):
-            spot.neighbors.append(i)
+            spot.neighbors.append((i,'L'))
         elif(cv2.pointPolygonTest(cnt, (spot.centre[0] , spot.centre[1] + h_av), False)==1):
-            spot.neighbors.append(i)
+            spot.neighbors.append((i,'B'))
         elif(cv2.pointPolygonTest(cnt, (spot.centre[0] , spot.centre[1] - h_av), False)==1):
-            spot.neighbors.append(i)
+            spot.neighbors.append((i,'F'))
+
         i += 1
     j+=1
 
+corner=None
+
+for spot in spots:
+    if len(spot.neighbors)<4:
+        spot.edge_score=1000
+        
+        corner=True
+    else:
+        if corner==True:
+            spot.edge_score=500
+            
+        corner=False
+imgedge = cv2.resize(img, (1500,800))
 
 Map = cv2.resize(img, (1500,800))
 
@@ -177,42 +200,47 @@ for spot in spots:
 
 count = 0
 open_set = PriorityQueue()
-open_set.put( (0, count, begin) ) #f_score, count(for tie breaking if 2 have same f_score), spot_id) 
+open_set.put( (0, count, (begin, 'F'))) #f_score, count(for tie breaking if 2 have same f_score), spot_id) 
 came_from = {begin:None}
 g_score = {spot: float("inf") for spot in range(0,i+1)}
 g_score[begin] = 0
 f_score = {spot: float("inf") for spot in range(0,i+1)}
 f_score[begin] = abs(spots[0].centre[0]-spots[last].centre[0]) + abs(spots[0].centre[1]-spots[last].centre[1])
 
-
 open_set_hash = {begin}
-closedList=[]
+weight=1.5
 
+expanded_nodes=0
 while not open_set.empty():
-    current = open_set.get()[2]
-    
+    node = open_set.get()[2]
+    current=node[0]
+    current_direction=node[1]
+    expanded_nodes+=1
+    cv2.rectangle(img,(spots[current].x,spots[current].y),(spots[current].x+spots[current].w,spots[current].y+spots[current].h),
+                      (0,255,0),thickness=cv2.FILLED)
     open_set_hash.remove(current)
-    closedList.append(current)
 
     if current == last:
         break
     
     for neighbor in spots[current].neighbors :
-        if neighbor in closedList:continue
 
-        temp_g_score = g_score[current] + g((spots[neighbor].centre[0],spots[neighbor].centre[1]),(spots[current].centre[0],spots[current].centre[1]))
+        temp_g_score = g_score[current] + PathCost(current_direction,neighbor[1])
 
-        if temp_g_score < g_score[neighbor]:
-            came_from[neighbor] = current
-            g_score[neighbor] = temp_g_score
-            f_score[neighbor] = temp_g_score + hue[neighbor]
-
-            if neighbor not in open_set_hash:
-                count = count + 1
-                open_set.put( (f_score[neighbor], count, neighbor) )
-                open_set_hash.add(neighbor)
+        if temp_g_score < g_score[neighbor[0]]:
+            came_from[neighbor[0]] = current
+            g_score[neighbor[0]] = temp_g_score
             
-        
+            if temp_g_score<hue[neighbor[0]]:
+                f_score[neighbor[0]] =temp_g_score + hue[neighbor[0]] + spots[neighbor[0]].edge_score
+            else:
+                f_score[neighbor[0]] =(temp_g_score + (2*weight-1)*hue[neighbor[0]])/weight + spots[neighbor[0]].edge_score
+            
+            if neighbor[0] not in open_set_hash:
+                count = count + 1
+                open_set.put((f_score[neighbor[0]], count, (neighbor[0],neighbor[1])))
+                open_set_hash.add(neighbor[0])
+
 path_to_Traverse=[]
 
 def print_path(img):
@@ -221,10 +249,9 @@ def print_path(img):
     while came_from[current]!=None:
         nodes.append(came_from[current])
         current=came_from[current]
-    
-    for node in nodes[::-1]:
+    for node in nodes:
         cv2.rectangle(img,(spots[node].x,spots[node].y),(spots[node].x+spots[node].w,spots[node].y+spots[node].h),
-                      (0,255,0),thickness=cv2.FILLED)
+                      (255,0,0),thickness=cv2.FILLED)
         path_to_Traverse.append([(spots[node].x+w//2),(spots[node].y+h//2)])
         
 
