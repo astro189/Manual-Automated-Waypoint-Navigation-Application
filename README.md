@@ -80,4 +80,34 @@
 
 https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/assets/97799598/c8de8386-fb8a-4612-b30e-4beb85b01515
 
+<b><hr>
+<h2>Phase-II: Improving A star</h2>
+My aim is to force the algorithm to go for simpler parallel paths and prefer open spaces over narrow paths to further cut down the risk of collision. This is what we try and achieve in this phase.
+<br>
+<p>There are 3 things we would like to achieve</p>
 
+<li>Introduce collision awareness</li>
+<li>Prioriatize parallel motion</li>
+<li>Improve the initial a star algorithm</li>
+
+<h3>1) Collision Awareness</h3>
+<p>The idea is to penalize the edge and corner nodes allowing for a added degree of safety from collisions, narrow pathways and sharp turns.</p>
+<p>The penalization criterai used is</p>
+
+<h3>2) Parallel Motion</h3>
+<p>By prioriatizing parallel motion we want to encourage horizontal/vertical movements, reducing turns and smoothing out the uncessary zig-zag portions that occur in the original algorithm due to the heuristic.The turn regularization is achieved by penalizing it based on its degree of rotation and adding it to the path cost of the node.</p>
+
+<p>Turning regularization is defined as:</p>
+
+<h3>3) Improved A star</h3>
+<p>The final improvement we want to gain is to reduce the number of nodes to be expanded inorder to find the sub-optimal path. To do so, we majorly experimented with two algorithms.</p>
+<li>Weighted A star</li>
+<li>Dynamic weighted A star</li>
+
+<h4>Weighted A star</h4>
+<p>The idea behind weighted A star is to decrease the number of node expansions through a greedy approach by increasing the heuristics effect over g(n), thus expanding nodes that are closer to the goal. It assumes a constant weight w (w>1). Weighted A star can be considered to lie in between A star and Greedy Best First Search, it also allows us to swicth from in between BFS, Weighted A star and Dijsktra’s algorithm.</p>
+
+<h4>Dynamic weighted A star</h4>
+<p>There were a few problems noticed with the orginal algortihm, majorly that since it does follow a greedy approach in some cases it might expand more number of nodes than A star if the relation between h(n) and g(n) is not strong enough. To overcome this a dynamic weigted approach was developed where using the original evaluation function seemed to be more suitable in the initial stages of the search and switch to a weighted function as we reached near the goal node.</p>
+
+The above mentioned methoods significantly improve the over all perfromance as well as the paths found by the algorithm
