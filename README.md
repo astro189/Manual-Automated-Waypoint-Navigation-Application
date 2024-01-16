@@ -37,7 +37,7 @@
 <li>The space in which the AI agent is allowed to move</li> 
 <li>The obstacles that the agent needs to avoid.</li>
 <br>
-<p>To do so we use a grid based system in which the entire area map is divided into cells, we then utilize contour detection for identifyting each cell of the grid the black grid lines along with the white background makes this process a lot easier. Once the contours have been found we go on to get the coordinates of each cell. This solves both of our above problems at once as the obstacles are completely black thus there contours are not identified and the open space is defined by the identified cells</p>
+<p>To do so we use a grid based system in which the entire area map is divided into cells, we then utilize contour detection for identifyting each cell of the grid, the black grid lines along with the white background makes this process a lot easier. Once the contours have been found we go on to get the coordinates of each cell. This solves both of our above problems at once as the obstacles are completely black thus their contours are not identified and the open space is defined by the identified cells</p>
 
 <div align="center" style="display: flex; justify-content: space-between;">
         <table>
