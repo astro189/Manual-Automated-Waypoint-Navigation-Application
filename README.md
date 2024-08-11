@@ -1,6 +1,44 @@
 # Manual-Automated-Waypoint-Navigation-Application
 <h4>What is MAWNA ?</h4>
-<p>It provides a generalized Automated or Manual waypoint indoor navigation system this involves  allowing any robotic system to navigate autonomously within an indoor environment by following the waypoints present in its generated path, Avoiding collision and coordinating with other systems in its environment for safe navigation.</p>
+<p>It provides a generalized Automated or Manual waypoint navigation system which involves allowing any robotic system to navigate autonomously within an environment by following the waypoints present in its generated path, Avoiding collision and coordinating with other systems in its environment for safe navigation.</p>
+
+<h2>Phase-III: Proportional Integral and Differential Control</h2>
+
+<p>PID is a widely used feedback-control algorithm for error correction in various feilds including robotics, the algorithm takes a setpoint and tries to minimize the difference between the feedback received from the sensors and the setpoint it works on three principle:
+<h3>Propotional</h3>
+        <p>The proportional control refers to fixed decrement in the error per feedback loop. It is characterized by the term <b>Kp</b> where a larger value of Kp indicates a larger error correction per                 iteration
+        </p>
+        <p align="center">
+          P = Kp * e(t)
+        </p>
+        
+<h3>Differential</h3>
+        <p>The differential term is used to control the rate of error correction which enables us to take larger correction steps at the beginning and slow down as we reach near the setpoint. It is represented              by <b>Kd</b></p>
+        <p align="center">
+          D = Kd * de(t)/dt
+        </p>
+<h3>Integral</h3>
+        <p>Even on reaching near the setpoint some constant residual can still be left called as the steady state error, the integral term mitigates this error. <b>Ki</b> is used to represent the integral term</p>
+        <p align="center">
+          I = Ki * ∫ e(τ) dτ
+        </p>
+
+The PID control output `u(t)` is given by the sum of the proportional, integral, and derivative components:
+
+<p align="center">
+  u(t) = Kp * e(t) + Ki * ∫ e(τ) dτ + Kd * de(t)/dt
+</p>
+</p>
+<br>
+<p>
+        The PID control is integrated into MAWNA to achieve linear motion and accurate angular turns. A demostration of the PID integration on a robotic system can be seen below.
+</p>
+
+https://github.com/user-attachments/assets/4cb07e5e-bbca-4084-b9be-caf9f1900815
+
+
+
+
 
 <h2>Phase-II: Improving A star</h2>
 My aim is to force the algorithm to go for simpler parallel paths and prefer open spaces over narrow paths to further cut down the risk of collision. This is what we try and achieve in this phase.
@@ -96,7 +134,7 @@ My aim is to force the algorithm to go for simpler parallel paths and prefer ope
 
 The above mentioned methods significantly improve the over all perfromance as well as the paths found by the algorithm
 <b><hr>
-<h2>Phase-I: A basic implementaton of the idea</h2>
+<h2>Phase-I: A basic implementation of the idea</h2>
 <h3>Components of Phase-I</h3>
 <li>A Simple Robotic System</li>
 <li>Basic implementation of the Path finding algorithm</li>
