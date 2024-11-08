@@ -4,6 +4,8 @@
 
 <h2>Phase-III: Proportional Integral and Differential Control</h2>
 
+https://github.com/user-attachments/assets/4cb07e5e-bbca-4084-b9be-caf9f1900815
+
 <p>PID is a widely used feedback-control algorithm for error correction in various feilds including robotics, the algorithm takes a setpoint and tries to minimize the difference between the feedback received from the sensors and the setpoint it works on three principle:
 <h3>Propotional</h3>
         <p>The proportional control refers to fixed decrement in the error per feedback loop. It is characterized by the term <b>Kp</b> where a larger value of Kp indicates a larger error correction per                 iteration
@@ -33,9 +35,6 @@ The PID control output `u(t)` is given by the sum of the proportional, integral,
 <p>
         The PID control is integrated into MAWNA to achieve linear motion and accurate angular turns. A demostration of the PID integration on a robotic system can be seen below.
 </p>
-
-https://github.com/user-attachments/assets/4cb07e5e-bbca-4084-b9be-caf9f1900815
-
 
 
 
