@@ -134,6 +134,9 @@ My aim is to force the algorithm to go for simpler parallel paths and prefer ope
 The above mentioned methods significantly improve the over all perfromance as well as the paths found by the algorithm
 <b><hr>
 <h2>Phase-I: A basic implementation of the idea</h2>
+
+https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/assets/97799598/c8de8386-fb8a-4612-b30e-4beb85b01515
+
 <h3>Components of Phase-I</h3>
 <li>A Simple Robotic System</li>
 <li>Basic implementation of the Path finding algorithm</li>
@@ -209,5 +212,5 @@ The above mentioned methods significantly improve the over all perfromance as we
 <p>This is where the Wifi-Module comes into the picture. We use a ESP 8266 NodeMCU wifi module for establishing a wireless connection with the robotic system over a local IP Address.</p>
 <p>The real world transformed coordinates are converted to commands and passed to the NodeMCU along with the time for which each command should be executed. The NodeMCU then executes the Arduino script which controls the components of the robotic system based on the received coordinates. This approach is also subject to change in the future phases as a much more robust system is required for a better real time tracking of the system coordinates.</p>
 
-https://github.com/astro189/Manual-Automated-Waypoint-Navigation-Application/assets/97799598/c8de8386-fb8a-4612-b30e-4beb85b01515
+
 
